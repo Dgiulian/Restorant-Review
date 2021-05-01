@@ -17,9 +17,11 @@ router
   .post(auth('manageRestaurants'), validate(restaurantValidation.createRestaurant), restaurantController.createRestaurant)
   .get(restaurantController.getRestaurants);
 
-router.route('/:restaurantId').get(validate(restaurantValidation.getRestaurant), restaurantController.getRestaurant);
-//  .patch(auth('manageRestaurants'), validate(restaurantValidation.updateRestaurant), restaurantController.updateRestaurant)
-//  .delete(auth('manageRestaurants'), validate(restaurantValidation.deleteRestaurant), restaurantController.deleteRestaurant);
+router
+  .route('/:restaurantId')
+  .get(validate(restaurantValidation.getRestaurant), restaurantController.getRestaurant)
+  //  .patch(auth('manageRestaurants'), validate(restaurantValidation.updateRestaurant), restaurantController.updateRestaurant)
+  .delete(auth('manageRestaurants'), validate(restaurantValidation.deleteRestaurant), restaurantController.deleteRestaurant);
 
 module.exports = router;
 
