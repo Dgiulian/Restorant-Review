@@ -6,12 +6,6 @@ const restaurantController = require('../../controllers/restaurant.controller');
 
 const router = express.Router();
 
-/* router
-    .route('/:restaurantId')
-    .get(validate(restaurantValidation.getRestaurant), restaurantController.getRestaurant)
-    .patch(auth('manageRestaurants'), validate(restaurantValidation.updateRestaurant), restaurantController.updateRestaurant)
-    .delete(auth('manageRestaurants'), validate(restaurantValidation.deleteRestaurant), restaurantController.deleteRestaurant);
- */
 router
   .route('/')
   .post(auth('manageRestaurants'), validate(restaurantValidation.createRestaurant), restaurantController.createRestaurant)
@@ -20,7 +14,7 @@ router
 router
   .route('/:restaurantId')
   .get(validate(restaurantValidation.getRestaurant), restaurantController.getRestaurant)
-  //  .patch(auth('manageRestaurants'), validate(restaurantValidation.updateRestaurant), restaurantController.updateRestaurant)
+  .patch(auth('manageRestaurants'), validate(restaurantValidation.updateRestaurant), restaurantController.updateRestaurant)
   .delete(auth('manageRestaurants'), validate(restaurantValidation.deleteRestaurant), restaurantController.deleteRestaurant);
 
 module.exports = router;
@@ -65,7 +59,7 @@ module.exports = router;
  *             schema:
  *                $ref: '#/components/schemas/Restaurant'
  *       "400":
- *         $ref: '#/components/responses/DuplicateEmail'
+ *         $ref: '#/components/responses/DuplicateName'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -83,11 +77,6 @@ module.exports = router;
  *         schema:
  *           type: string
  *         description: Restaurant name
- *       - in: query
- *         name: role
- *         schema:
- *           type: string
- *         description: Restaurant role
  *       - in: query
  *         name: sortBy
  *         schema:

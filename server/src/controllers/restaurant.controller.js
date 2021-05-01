@@ -40,9 +40,23 @@ const deleteRestaurant = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const updateRestaurant = catchAsync(async (req, res) => {
+  const { restaurantId } = req.params;
+  const restaurant = await restaurantService.getRestaurantById(restaurantId);
+  if (!restaurant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found');
+  }
+  if (!mongo.ObjectID(restaurant.owner._id).equals(req.user._id)) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Not Restaurant owner');
+  }
+  const updatedRestaurant = await restaurantService.updateRestaurantById(req.params.restaurantId, req.body);
+  res.send(updatedRestaurant);
+});
+
 module.exports = {
   getRestaurants,
   createRestaurant,
   getRestaurant,
   deleteRestaurant,
+  updateRestaurant,
 };
