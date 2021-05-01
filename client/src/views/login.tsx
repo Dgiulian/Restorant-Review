@@ -1,5 +1,10 @@
 import React, { ReactElement } from 'react';
-import { Input } from '../components/FormElements';
+import { Link } from 'react-router-dom';
+import {
+  Input,
+  PrimaryButton,
+  SecondaryButton,
+} from '../components/FormElements';
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -35,12 +40,18 @@ function LoginPage(): ReactElement {
             <Input type="password" id="password" placeholder="Your Password" />
           </div>
 
-          <div className="flex justify-center items-center mt-6">
-            <button
-              className={`bg-green py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-green-dark`}
+          <div className="flex justify-center items-center mt-4">
+            <PrimaryButton>Login</PrimaryButton>
+          </div>
+          <hr className="border-gray-200  my-4" />
+          <div className="flex flex-col justify-center items-center mt-4">
+            <p className="mb-2">Dont have an account?</p>
+            <Link
+              className="bg-blue-500 py-2 px-4 text-sm text-white rounded border border-blue-500 focus:outline-none focus:border-blue-dark"
+              to="/register"
             >
-              Login
-            </button>
+              Register
+            </Link>
           </div>
         </form>
       </div>
