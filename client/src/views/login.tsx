@@ -1,10 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Input,
-  PrimaryButton,
-  SecondaryButton,
-} from '../components/FormElements';
+import { Input, PrimaryButton } from '../components/FormElements';
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
