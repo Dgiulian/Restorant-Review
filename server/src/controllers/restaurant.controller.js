@@ -17,7 +17,16 @@ const createRestaurant = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(restaurant);
 });
 
+const getRestaurant = catchAsync(async (req, res) => {
+  const restaurant = await restaurantService.getRestaurantById(req.params.restaurantId);
+  if (!restaurant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found');
+  }
+  res.send(restaurant);
+});
+
 module.exports = {
   getRestaurants,
   createRestaurant,
+  getRestaurant,
 };
