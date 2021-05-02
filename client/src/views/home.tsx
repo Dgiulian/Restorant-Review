@@ -1,10 +1,15 @@
 import React, { ReactElement } from 'react';
 import Layout from '../components/Layout';
+import RestaurantList from '../components/RestaurantList';
 
-interface Props {}
-
-function HomePage({}: Props): ReactElement {
-  return <Layout>Home</Layout>;
+function HomePage(): ReactElement {
+  return (
+    <Layout>
+      <section>
+        <RestaurantList />
+      </section>
+    </Layout>
+  );
 }
 
 export default HomePage;

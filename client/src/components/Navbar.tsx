@@ -1,8 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
-interface Props {}
-
 function Navbar(): ReactElement {
   return (
     <nav className="w-full border py-4 px-2 bg-green-400">
