@@ -5,7 +5,7 @@ import { ApiResponse, IRestaurant } from '../../types';
 import RestaurantCard from './RestaurantCard';
 
 function RestaurantList(): ReactElement {
-  const { isLoading, error, data } = useQuery<ApiResponse<IRestaurant>>(
+  const { isLoading, error, data } = useQuery<ApiResponse<IRestaurant[]>>(
     'restaurantList',
     getRestaurantList
   );

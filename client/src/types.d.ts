@@ -6,5 +6,5 @@ export interface IRestaurant {
 }
 
 export interface ApiResponse<T> {
-  results: T[];
+  results: T;
 }
