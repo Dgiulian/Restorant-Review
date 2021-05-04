@@ -5,6 +5,8 @@ import { getRestaurantById } from '../api';
 import { IRestaurant } from '../types';
 import ReactStars from 'react-rating-stars-component';
 import Layout from '../components/Layout';
+import ReviewList from '../components/ReviewList';
+import ReviewForm from '../components/ReviewList/ReviewForm';
 
 function RestaurantPage(): ReactElement {
   const params = useParams<{ restaurantId: string }>();
@@ -28,16 +30,12 @@ function RestaurantPage(): ReactElement {
           <p>{data!.address}</p>
           <div>
             <span>Rating</span>
-            <ReactStars
-              count={5}
-              size={24}
-              value={4}
-              edit={false}
-              activeColor="#ffd700"
-            />
+            <ReactStars count={5} size={30} value={4} edit={false} />
           </div>
         </div>
       </section>
+      <ReviewForm />
+      <ReviewList />
     </Layout>
   );
 }
