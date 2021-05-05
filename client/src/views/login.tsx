@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react';
-import { Link } from 'react-router-dom';
+import React, { ReactElement, useContext, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { AuthContext } from '../auth/AuthProvider';
 import { Input, PrimaryButton } from '../components/FormElements';
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -11,13 +12,20 @@ interface LoginFormElement extends HTMLFormElement {
 }
 
 function LoginPage(): ReactElement {
-  const handleFormSubmit = (e: React.FormEvent<LoginFormElement>) => {
+  const authContext = useContext(AuthContext);
+  const [error, setError] = useState('');
+  const history = useHistory();
+  const handleFormSubmit = async (e: React.FormEvent<LoginFormElement>) => {
     e.preventDefault();
 
     let email = e.currentTarget.elements.email?.value;
     let password = e.currentTarget.elements.password?.value;
-
-    console.log(email, password);
+    try {
+      await authContext.login({ email, password });
+      history.push('/');
+    } catch (e) {
+      setError(e.message);
+    }
   };
   return (
     <div className="h-screen flex bg-gray-bg1">
@@ -35,15 +43,15 @@ function LoginPage(): ReactElement {
             <label htmlFor="password">Password</label>
             <Input type="password" id="password" placeholder="Your Password" />
           </div>
-
+          {error && <p className="text-red-500">{error}</p>}
           <div className="flex justify-center items-center mt-4">
             <PrimaryButton>Login</PrimaryButton>
           </div>
           <hr className="border-gray-200  my-4" />
-          <div className="flex flex-col justify-center items-center mt-4">
-            <p className="mb-2">Dont have an account?</p>
+          <div className="flex justify-center items-baseline mt-4">
+            <span className="mb-2">Dont have an account?</span>
             <Link
-              className="bg-blue-500 py-2 px-4 text-sm text-white rounded border border-blue-500 focus:outline-none focus:border-blue-dark"
+              className="text-blue-500 py-2 px-2 text-sm rounded focus:outline-none focus:border-blue-dark"
               to="/register"
             >
               Register
