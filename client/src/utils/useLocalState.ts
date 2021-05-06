@@ -12,7 +12,11 @@ export function useLocalState<S = undefined>(key: string, initialValue: S) {
   });
   useEffect(() => {
     if (window.localStorage) {
-      window.localStorage.setItem(key, JSON.stringify(value));
+      if (typeof value !== 'undefined') {
+        window.localStorage.setItem(key, JSON.stringify(value));
+      } else {
+        window.localStorage.removeItem(key);
+      }
     }
   }, [key, value]);
   return [value, setValue] as [typeof value, typeof setValue];

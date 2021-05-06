@@ -106,8 +106,8 @@ export const refreshToken = (body: IRefreshTokenBody) => {
   return axios.post(`${SERVER_URL}/auth/refresh_tokens`, body);
 };
 
-export const logout = () => {
-  return axios.delete(`${SERVER_URL}/auth/logout`);
+export const logout = (token: string) => {
+  return axios.post(`${SERVER_URL}/auth/logout`, { refreshToken: token });
 };
 
 export const getProtected = () => {

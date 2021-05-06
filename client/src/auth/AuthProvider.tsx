@@ -1,6 +1,6 @@
-import { createContext } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useLocalState } from '../utils/useLocalState';
-import Api, { ILoginResponse } from '../api';
+import Api from '../api';
 
 const AuthContext = createContext({
   isLogged: false,
@@ -9,7 +9,18 @@ const AuthContext = createContext({
 });
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [token, setToken] = useLocalState<string>('accessToken', '');
+  const [accessToken, setAccessToken] = useLocalState<string | undefined>(
+    'accessToken',
+    ''
+  );
+  const [refreshToken, setRefreshToken] = useLocalState<string | undefined>(
+    'refreshToken',
+    ''
+  );
+  const [isLogged, setIsLogged] = useState(() => !!accessToken);
+  useEffect(() => {
+    setIsLogged(!!accessToken);
+  }, [accessToken]);
   const login = async ({
     email,
     password,
@@ -24,9 +35,9 @@ const AuthProvider: React.FC = ({ children }) => {
       });
 
       if (data && 'tokens' in data) {
-        setToken(data.tokens.access.token);
+        setAccessToken(data.tokens.access.token);
+        setRefreshToken(data.tokens.refresh.token);
       } else {
-        console.log(data);
         throw new Error(data.message);
       }
     } catch (e) {
@@ -34,9 +45,15 @@ const AuthProvider: React.FC = ({ children }) => {
     }
   };
   const logout = async () => {
-    const data = await Api.logout();
+    try {
+      if (refreshToken) {
+        await Api.logout(refreshToken);
+      }
+      setAccessToken(undefined);
+      setRefreshToken(undefined);
+    } catch (error) {}
   };
-  const isLogged = token !== '';
+
   return (
     <AuthContext.Provider value={{ isLogged, login, logout }}>
       {children}
