@@ -1,8 +1,9 @@
 export interface IRestaurant {
-  id: string;
+  id?: string;
   name: string;
+  description: string;
   address: string;
-  owner: string;
+  owner?: string;
 }
 
 export interface ApiResponse<T> {

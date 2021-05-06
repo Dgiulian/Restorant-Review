@@ -8,6 +8,8 @@ function Navbar(): ReactElement {
   const handleLogout = () => {
     logout();
   };
+  const isOwner = user && user.role === 'owner';
+
   return (
     <nav className="w-full border py-4 bg-green-400">
       <div className=" mx-auto flex justify-between items-baseline container">
@@ -15,6 +17,7 @@ function Navbar(): ReactElement {
           Restaurant Review
         </Link>
         <div className="ml-auto mr-1">
+          {isOwner && <Link to="/create">Add your restaurant</Link>}
           {isLogged ? (
             <div>
               <span className="mx-1 ">{user?.email}</span>

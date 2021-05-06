@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IUser } from '../types';
+import { IRestaurant, IUser } from '../types';
 
 const SERVER_URL = 'http://localhost:5000/v1';
 export interface ILoginBody {
@@ -40,7 +40,7 @@ axios.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
-      config.headers['x-auth-token'] = accessToken;
+      config.headers['Authorization'] = `Bearer ${JSON.parse(accessToken)}`;
     }
     return config;
   },
@@ -58,21 +58,27 @@ axios.interceptors.response.use(
     let refreshToken = localStorage.getItem('refreshToken');
     if (
       refreshToken &&
+      error.response &&
       error.response.status === 401 &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
       return axios
-        .post(`${SERVER_URL}/auth/refresh_token`, {
-          refreshToken: refreshToken,
+        .post(`${SERVER_URL}/auth/refresh-tokens`, {
+          refreshToken: JSON.parse(refreshToken),
         })
         .then((res) => {
+          console.log(res);
           if (res.status === 200) {
-            localStorage.setItem('accessToken', res.data.accessToken);
+            localStorage.setItem(
+              'accessToken',
+              JSON.stringify(res.data.access.token)
+            );
             console.log('Access token refreshed!');
             return axios(originalRequest);
           }
-        });
+        })
+        .catch(console.error);
     }
     return Promise.reject(error);
   }
@@ -108,7 +114,7 @@ export const login = async (body: ILoginBody) => {
 };
 
 export const refreshToken = (body: IRefreshTokenBody) => {
-  return axios.post(`${SERVER_URL}/auth/refresh_tokens`, body);
+  return axios.post(`${SERVER_URL}/auth/refresh-tokens`, body);
 };
 
 export const logout = (token: string) => {
@@ -135,6 +141,10 @@ export async function getRestaurantById(restaurantId: string) {
   return resp.data;
 }
 
+async function createRestaurant(body: IRestaurant) {
+  return axios.post(`${SERVER_URL}/restaurant`, body);
+}
+
 const Api = {
   register,
   login,
@@ -142,6 +152,7 @@ const Api = {
   refreshToken,
   getRestaurantList,
   getRestaurantById,
+  createRestaurant,
 };
 
 export default Api;
