@@ -6,9 +6,10 @@ export interface ILoginBody {
   email: string;
   password: string;
 }
-interface IRegisterBody {
+export interface IRegisterBody {
   email: string;
   name: string;
+  role: 'user' | 'owner' | 'admin';
   password: string;
 }
 interface IRefreshTokenBody {
@@ -78,8 +79,18 @@ axios.interceptors.response.use(
 );
 //functions to make api calls
 
-export const register = (body: IRegisterBody) => {
-  return axios.post(`${SERVER_URL}/auth/register`, body);
+export const register = async (body: IRegisterBody) => {
+  try {
+    const response = await axios.post<ILoginError | ILoginResponse>(
+      `${SERVER_URL}/auth/register`,
+      body
+    );
+    if (response.status === 201) {
+      return response.data;
+    }
+  } catch (error) {
+    return error.response.data;
+  }
 };
 
 export const login = async (body: ILoginBody) => {
@@ -125,6 +136,7 @@ export async function getRestaurantById(restaurantId: string) {
 }
 
 const Api = {
+  register,
   login,
   logout,
   refreshToken,

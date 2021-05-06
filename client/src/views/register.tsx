@@ -1,23 +1,47 @@
-import React, { ReactElement } from 'react';
-import { Link } from 'react-router-dom';
+import React, { ReactElement, useContext, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { Input, PrimaryButton } from '../components/FormElements';
-
+import Api from '../api';
+import { AuthContext } from '../auth/AuthProvider';
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
+  name: HTMLInputElement;
+  owner: HTMLInputElement;
   password: HTMLInputElement;
+  password_retype: HTMLInputElement;
 }
 interface LoginFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
 function RegisterPage(): ReactElement {
-  const handleFormSubmit = (e: React.FormEvent<LoginFormElement>) => {
-    e.preventDefault();
+  const [error, setError] = useState('');
+  const { register } = useContext(AuthContext);
+  const history = useHistory();
 
+  const handleFormSubmit = async (e: React.FormEvent<LoginFormElement>) => {
+    e.preventDefault();
+    setError('');
     let email = e.currentTarget.elements.email?.value;
     let password = e.currentTarget.elements.password?.value;
-
-    console.log(email, password);
+    let password_retype = e.currentTarget.elements.password_retype?.value;
+    let name = e.currentTarget.elements.name?.value;
+    let isOwner = e.currentTarget.elements.owner?.checked;
+    if (password !== password_retype) {
+      setError('Password does not match retype');
+      return;
+    }
+    try {
+      await register({
+        email,
+        password,
+        name,
+        role: isOwner ? 'owner' : 'user',
+      });
+      history.push('/');
+    } catch (e) {
+      setError(e.message);
+    }
   };
   return (
     <div className="h-screen flex bg-gray-bg1">
@@ -28,22 +52,38 @@ function RegisterPage(): ReactElement {
 
         <form onSubmit={handleFormSubmit}>
           <div>
+            <label htmlFor="name">Name</label>
+            <Input type="name" id="name" placeholder="Your Name" />
+          </div>
+          <div>
             <label htmlFor="email">Email</label>
             <Input type="email" id="email" placeholder="Your Email" />
           </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <Input type="password" id="password" placeholder="Your Password" />
-          </div>
-          <div>
-            <label htmlFor="password">Verify Password</label>
-            <Input
-              type="password-2"
-              id="password-2"
-              placeholder="Your Password"
-            />
-          </div>
 
+          <div className="flex justify-between gap-2">
+            <div>
+              <label htmlFor="password">Password</label>
+              <Input
+                type="password"
+                id="password"
+                placeholder="Your Password"
+              />
+            </div>
+
+            <div className="">
+              <label htmlFor="password_retype">Verify Password</label>
+              <Input
+                type="password"
+                id="password_retype"
+                placeholder="Retype your Password"
+              />
+            </div>
+          </div>
+          <div>
+            <input type="checkbox" id="owner" className="mr-1" />
+            <label htmlFor="owner">I'm a restaurant owner</label>
+          </div>
+          {error && <p className="text-red-600 mt-2">{error}</p>}
           <div className="flex justify-center items-center mt-4">
             <PrimaryButton>Create account</PrimaryButton>
           </div>
