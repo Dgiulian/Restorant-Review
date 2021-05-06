@@ -5,6 +5,7 @@ const createRestaurant = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     address: Joi.string().required(),
+    description: Joi.string(),
   }),
 };
 
