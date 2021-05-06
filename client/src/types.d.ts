@@ -22,3 +22,11 @@ export interface IReview {
 interface FormElements<T> extends HTMLFormElement {
   readonly elements: T;
 }
+
+export interface IUser {
+  email: string;
+  id: string;
+  isEmailVerified: boolean;
+  name: 'string';
+  role: 'owner' | 'admin' | 'user';
+}

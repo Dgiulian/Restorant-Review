@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { IUser } from '../types';
 
 const SERVER_URL = 'http://localhost:5000/v1';
 export interface ILoginBody {
@@ -26,13 +27,7 @@ export interface ILoginResponse {
     };
   };
 
-  user: {
-    email: string;
-    id: string;
-    isEmailVerified: boolean;
-    name: 'string';
-    role: 'owner' | 'admin' | 'user';
-  };
+  user: IUser;
 }
 interface ILoginError {
   code: number;
@@ -93,7 +88,6 @@ export const login = async (body: ILoginBody) => {
       `${SERVER_URL}/auth/login`,
       body
     );
-    console.log(response);
     if (response.status === 200) {
       return response.data;
     }
