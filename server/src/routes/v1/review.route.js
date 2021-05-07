@@ -1,13 +1,18 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-//const reviewValidation = require('../../validations/review.validation');
+const reviewValidation = require('../../validations/review.validation');
 const reviewController = require('../../controllers/review.controller');
 
 const router = express.Router();
 
-router.route('/restaurant/:restaurantId/review').get(reviewController.getReviews);
+router
+  .route('/')
+  .post(auth('createReview'), validate(reviewValidation.createReview), reviewController.createReview)
+  .get(reviewController.getReviews);
 
-//router
+router
+  .route('/:reviewId')
+  .get(validate(reviewValidation.createReview), reviewController.getReview);
 
 module.exports = router;

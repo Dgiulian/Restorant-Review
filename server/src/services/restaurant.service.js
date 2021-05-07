@@ -35,7 +35,7 @@ const createRestaurant = async (restaurantBody) => {
  * @returns {Promise<Restaurant>}
  */
 const getRestaurantById = async (id) => {
-  return Restaurant.findById(id);
+  return Restaurant.findById(id).populate('reviews');
 };
 
 /**
@@ -44,7 +44,7 @@ const getRestaurantById = async (id) => {
  * @returns {Promise<Restaurant>}
  */
 const getRestaurantByOnwer = async (id) => {
-  return Restaurant.findById(id);
+  return Restaurant.find({ owner: id }).populate('reviews');
 };
 
 /**

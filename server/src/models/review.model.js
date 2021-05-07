@@ -5,6 +5,7 @@ const reviewSchema = mongoose.Schema({
   restaurant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Restaurant',
+    required: true,
   },
   text: {
     type: String,
@@ -19,18 +20,22 @@ const reviewSchema = mongoose.Schema({
   },
   date: {
     type: Date,
+    default: () => Date.now(),
   },
   response: {
     type: String,
     required: false,
     trim: true,
+    default: null,
   },
   response_date: {
     type: Date,
+    default: null,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true,
   },
 });
 
