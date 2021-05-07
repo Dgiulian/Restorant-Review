@@ -2,7 +2,8 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { reviewService } = require('../services');
+const { reviewService, restaurantService } = require('../services');
+
 const { mongo } = require('mongoose');
 
 const getReviews = catchAsync(async (req, res) => {
@@ -59,9 +60,31 @@ const deleteReview = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const addResponse = catchAsync(async (req, res) => {
+  const { user } = req;
+  const review = await reviewService.getReviewById(req.params.reviewId);
+  if (!review) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Review not found');
+  }
+
+  const restaurant = await restaurantService.getRestaurantById(review.restaurant);
+
+  if (!restaurant) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found');
+  }
+
+  if (!restaurant.owner.equals(user.id)) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Cannot add response to review');
+  }
+  const response = await reviewService.addResponse(req.params.reviewId, { response: req.body.text });
+
+  res.status(httpStatus.OK).send(response);
+});
+
 module.exports = {
   getReviews,
   createReview,
   getReview,
   deleteReview,
+  addResponse,
 };

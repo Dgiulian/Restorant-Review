@@ -42,11 +42,19 @@ const deleteReview = {
     reviewId: Joi.string().custom(objectId),
   }),
 };
-
+const addResponse = {
+  params: Joi.object().keys({
+    reviewId: Joi.string().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    text: Joi.string().required(),
+  }),
+};
 module.exports = {
   createReview,
   getReviews,
   getReview,
   updateReview,
   deleteReview,
+  addResponse,
 };

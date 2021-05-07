@@ -12,6 +12,10 @@ router
   .get(reviewController.getReviews);
 
 router
+  .route('/response/:reviewId')
+  .post(auth('addResponse'), validate(reviewValidation.addResponse), reviewController.addResponse);
+
+router
   .route('/:reviewId')
   .delete(auth('deleteReview'), validate(reviewValidation.deleteReview), reviewController.deleteReview)
   .get(validate(reviewValidation.createReview), reviewController.getReview);

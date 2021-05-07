@@ -36,8 +36,8 @@ const getReviewById = async (id) => {
  * @param {ObjectId} userId
  * @returns {Promise<Restaurant>}
  */
-const getRestaurantByUser = async (id) => {
-  return Restaurant.findById(id);
+const getReviewByUser = async (id) => {
+  return Review.find({ user: id });
 };
 
 /**
@@ -54,11 +54,16 @@ const deleteReviewById = async (reviewId) => {
   return review;
 };
 
+const addResponse = async (reviewId, body) => {
+  return Review.findByIdAndUpdate(reviewId, { ...body, response_date: new Date() }, { new: true });
+};
+
 module.exports = {
   getReviewsByRestaurantId,
   createReview,
   getReviewById,
-  getRestaurantByUser,
+  getReviewByUser,
   // updateReviewById,
   deleteReviewById,
+  addResponse,
 };
