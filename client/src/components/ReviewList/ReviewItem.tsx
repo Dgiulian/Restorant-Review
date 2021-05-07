@@ -7,9 +7,10 @@ import ReviewResponseForm from './ReviewResponseForm';
 
 interface Props {
   review: IReview;
+  isRestaurantOwner: boolean;
 }
 
-function ReviewItem({ review }: Props): ReactElement {
+function ReviewItem({ review, isRestaurantOwner }: Props): ReactElement {
   return (
     <div className="my-4 p-2 p">
       <span className="font-bold text-md">{review.user.name}</span>
@@ -24,9 +25,9 @@ function ReviewItem({ review }: Props): ReactElement {
       <p>{review.text}</p>
       {review.response ? (
         <ReviewResponse date={review.response_date} text={review.response} />
-      ) : (
+      ) : isRestaurantOwner ? (
         <ReviewResponseForm />
-      )}
+      ) : null}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { getRestaurantById } from '../api';
@@ -7,9 +7,12 @@ import ReactStars from 'react-rating-stars-component';
 import Layout from '../components/Layout';
 import ReviewList from '../components/ReviewList';
 import ReviewForm from '../components/ReviewList/ReviewForm';
+import { AuthContext } from '../auth/AuthProvider';
 
 function RestaurantPage(): ReactElement {
   const params = useParams<{ restaurantId: string }>();
+  const { user } = useContext(AuthContext);
+
   const { isLoading, error, data } = useQuery<IRestaurant>('restaurant', () =>
     getRestaurantById(params.restaurantId)
   );
@@ -19,6 +22,7 @@ function RestaurantPage(): ReactElement {
   if (error) {
     return <p>An error has occured</p>;
   }
+  const isRestaurantOwner = user?.id === data?.owner;
   return (
     <Layout>
       <section className="grid grid-cols-2 gap-4 ">
@@ -35,7 +39,10 @@ function RestaurantPage(): ReactElement {
         </div>
       </section>
       <ReviewForm />
-      <ReviewList reviews={data?.reviews} />
+      <ReviewList
+        reviews={data?.reviews}
+        isRestaurantOwner={isRestaurantOwner}
+      />
     </Layout>
   );
 }
