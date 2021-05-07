@@ -38,7 +38,7 @@ function RestaurantPage(): ReactElement {
           </div>
         </div>
       </section>
-      <ReviewForm />
+      {!isRestaurantOwner ? <ReviewForm /> : null}
       <ReviewList
         reviews={data?.reviews}
         isRestaurantOwner={isRestaurantOwner}
