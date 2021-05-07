@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react';
-import { formatDistance } from 'date-fns';
+import { formatDistance, parseISO } from 'date-fns';
 
 interface Props {
   text: string;
-  date: Date | null;
+  date: string | null;
 }
 
 function ReviewResponse({ text, date }: Props): ReactElement {
@@ -12,7 +12,7 @@ function ReviewResponse({ text, date }: Props): ReactElement {
       <span className="font-bold text-gray-500">Response from the owner</span>
       <span className="ml-4 pt-1 text-gray-600">
         {date &&
-          formatDistance(date, new Date(), {
+          formatDistance(parseISO(date), new Date(), {
             addSuffix: true,
           })}
       </span>

@@ -21,12 +21,12 @@ function RestaurantPage(): ReactElement {
   }
   return (
     <Layout>
-      <h1 className="text-4xl my-2 mx-auto">{data!.name}</h1>
       <section className="grid grid-cols-2 gap-4 ">
         <div className="">
           <img src="/images/1.jpg" alt={data!.name} className="w-full" />
         </div>
         <div>
+          <h1 className="text-4xl my-2 mx-auto">{data!.name}</h1>
           <p>{data!.address}</p>
           <div>
             <span>Rating</span>
@@ -35,7 +35,7 @@ function RestaurantPage(): ReactElement {
         </div>
       </section>
       <ReviewForm />
-      <ReviewList />
+      <ReviewList reviews={data?.reviews} />
     </Layout>
   );
 }

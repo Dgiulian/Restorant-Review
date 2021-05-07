@@ -1,4 +1,4 @@
-import { formatDistance } from 'date-fns';
+import { formatDistance, parseISO } from 'date-fns';
 import React, { ReactElement } from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { IReview } from '../../types';
@@ -12,16 +12,16 @@ interface Props {
 function ReviewItem({ review }: Props): ReactElement {
   return (
     <div className="my-4 p-2 p">
-      <span className="font-bold text-md">{review.name}</span>
+      <span className="font-bold text-md">{review.user.name}</span>
       <div className="flex align-middle">
         <ReactStars count={5} size={20} value={review.rating} edit={false} />
         <span className="ml-4 pt-1 text-gray-600">
-          {formatDistance(review.date, new Date(), {
+          {formatDistance(parseISO(review.date), new Date(), {
             addSuffix: true,
           })}
         </span>
       </div>
-      <p>{review.review}</p>
+      <p>{review.text}</p>
       {review.response ? (
         <ReviewResponse date={review.response_date} text={review.response} />
       ) : (

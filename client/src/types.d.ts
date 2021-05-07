@@ -4,20 +4,21 @@ export interface IRestaurant {
   description: string;
   address: string;
   owner?: string;
+  reviews?: IReview[];
 }
-
 export interface ApiResponse<T> {
   results: T;
 }
 
 export interface IReview {
   id: string;
-  name: string;
+  text: string;
+
   rating: number;
-  review: string;
-  date: Date;
+  user: { name: string };
+  date: string;
   response: string | null;
-  response_date: Date | null;
+  response_date: string | null;
 }
 
 interface FormElements<T> extends HTMLFormElement {
