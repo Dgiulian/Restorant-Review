@@ -25,8 +25,43 @@ const getReview = catchAsync(async (req, res) => {
   res.send(review);
 });
 
+const deleteReview = catchAsync(async (req, res) => {
+  // If 'user' can only delete its own review
+  // If owner can only delete reviews for the Restaurant
+  // If admin can delete any review
+  const { user } = req;
+  const review = await reviewService.getReviewById(req.params.reviewId);
+  if (!review) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Review not found');
+  }
+  switch (user.role) {
+    case 'user': {
+      if (mongo.ObjectID(review.user) !== mongo.ObjectID(user.id)) {
+        new ApiError(httpStatus.FORBIDDEN, 'Not allowed to delete review');
+      } else {
+        break;
+      }
+    }
+    case 'owner': {
+      if (mongo.ObjectID(review.owner) !== mongo.ObjectID(user.id)) {
+        new ApiError(httpStatus.FORBIDDEN, 'Not allowed to delete review');
+      } else {
+        break;
+      }
+    }
+    case 'admin': {
+      break;
+    }
+    default:
+      new ApiError(httpStatus.FORBIDDEN, 'Not allowed to delete review');
+  }
+  await reviewService.deleteReviewById(req.params.reviewId, req.user);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 module.exports = {
   getReviews,
   createReview,
   getReview,
+  deleteReview,
 };

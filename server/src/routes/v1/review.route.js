@@ -13,6 +13,7 @@ router
 
 router
   .route('/:reviewId')
+  .delete(auth('deleteReview'), validate(reviewValidation.deleteReview), reviewController.deleteReview)
   .get(validate(reviewValidation.createReview), reviewController.getReview);
 
 module.exports = router;
