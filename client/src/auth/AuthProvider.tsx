@@ -74,10 +74,10 @@ const AuthProvider: React.FC = ({ children }) => {
       if (refreshToken) {
         await Api.logout(refreshToken);
       }
-      setAccessToken(undefined);
-      setRefreshToken(undefined);
-      setUser(undefined);
     } catch (error) {}
+    setAccessToken(undefined);
+    setRefreshToken(undefined);
+    setUser(undefined);
   };
 
   return (
