@@ -1,5 +1,5 @@
 import React, { ReactElement, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { getRestaurantById } from '../api';
 import { IRestaurant } from '../types';
@@ -25,13 +25,13 @@ function RestaurantPage(): ReactElement {
   }
   const isRestaurantOwner = user?.id === data?.owner;
   const hasReview = !!data?.reviews?.find(
-    (review) => review.user.id === user!.id
+    (review) => review.user.id === user?.id
   );
   return (
     <Layout>
       {data ? (
         <>
-          <section className="grid grid-cols-2 gap-4 ">
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
             <div className="">
               <img src="/images/1.jpg" alt={data!.name} className="w-full" />
             </div>
@@ -47,12 +47,21 @@ function RestaurantPage(): ReactElement {
               </div>
             </div>
           </section>
-          <h3 className="text-xl my-2">What our clients are saying</h3>
+          <h3 className="text-xl mt-4 mb-2">What our clients are saying</h3>
           <ReviewList
             reviews={data?.reviews}
             isRestaurantOwner={isRestaurantOwner}
           />
-          {!isRestaurantOwner && !hasReview ? (
+          {!data?.reviews?.length && <p>No reviews yet</p>}
+          {!user && (
+            <p className="text-center mt-4">
+              <Link to="/login" className="text-blue-600 mr-1">
+                Login
+              </Link>{' '}
+              to leave a review
+            </p>
+          )}
+          {user && !isRestaurantOwner && !hasReview ? (
             <ReviewForm restaurant={data?.id!} />
           ) : null}
         </>

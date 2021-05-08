@@ -1,6 +1,7 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import ReviewItem from './ReviewItem';
 import { IReview } from '../../types';
+import { AuthContext } from '../../auth/AuthProvider';
 interface ReviewListProps {
   reviews?: IReview[];
   isRestaurantOwner: boolean;
@@ -9,6 +10,7 @@ function ReviewList({
   reviews,
   isRestaurantOwner,
 }: ReviewListProps): ReactElement {
+  const { user } = useContext(AuthContext);
   return (
     <div>
       {reviews &&
@@ -17,6 +19,7 @@ function ReviewList({
             key={item.id}
             review={item}
             isRestaurantOwner={isRestaurantOwner}
+            user={user}
           />
         ))}
     </div>

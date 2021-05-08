@@ -2,7 +2,7 @@ import { formatDistance, parseISO } from 'date-fns';
 import React, { ReactElement } from 'react';
 import { useMutation } from 'react-query';
 import ReactStars from 'react-rating-stars-component';
-import { IRestaurant, IReview } from '../../types';
+import { IRestaurant, IReview, IUser } from '../../types';
 import ReviewResponse from './ReviewResponse';
 import ReviewResponseForm from './ReviewResponseForm';
 import Api from '../../api';
@@ -11,9 +11,10 @@ import { queryClient } from '../../queryClient';
 interface Props {
   review: IReview;
   isRestaurantOwner: boolean;
+  user: IUser | undefined;
 }
 
-function ReviewItem({ review, isRestaurantOwner }: Props): ReactElement {
+function ReviewItem({ review, isRestaurantOwner, user }: Props): ReactElement {
   const { mutate } = useMutation(
     (reviewId: string) => Api.removeReview(reviewId),
     {
@@ -42,9 +43,11 @@ function ReviewItem({ review, isRestaurantOwner }: Props): ReactElement {
     <div className="my-4">
       <div className="text-gray-800 text-lg">
         {review.user.name}
-        <button className="ml-4" onClick={handleDelete}>
-          remove
-        </button>
+        {user && review.user?.id === user?.id && (
+          <button className="ml-4" onClick={handleDelete}>
+            remove
+          </button>
+        )}
       </div>
       <div className="flex align-middle">
         <ReactStars count={5} size={20} value={review.rating} edit={false} />
