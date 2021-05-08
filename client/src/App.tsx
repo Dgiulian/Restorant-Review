@@ -6,6 +6,7 @@ import HomePage from './views/home';
 import LoginPage from './views/login';
 import RegisterPage from './views/register';
 import RestaurantPage from './views/restaurant';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         />
         <Route path="/" exact component={HomePage} />
       </Switch>
+      <ReactQueryDevtools initialIsOpen={false} />
     </Router>
   );
 }
