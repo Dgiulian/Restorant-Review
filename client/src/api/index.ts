@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { IRestaurant, IUser } from '../types';
+import {
+  IAddResponseParams,
+  IAddReviewParams,
+  IRestaurant,
+  IUser,
+} from '../types';
 
 const SERVER_URL = 'http://localhost:5000/v1';
 export interface ILoginBody {
@@ -145,6 +150,13 @@ async function createRestaurant(body: IRestaurant) {
   return axios.post(`${SERVER_URL}/restaurant`, body);
 }
 
+async function addReview(body: IAddReviewParams) {
+  return axios.post(`${SERVER_URL}/review`, body);
+}
+async function addResponse(reviewId: string, body: IAddResponseParams) {
+  return axios.post(`${SERVER_URL}/review/response/${reviewId}`, body);
+}
+
 const Api = {
   register,
   login,
@@ -153,6 +165,8 @@ const Api = {
   getRestaurantList,
   getRestaurantById,
   createRestaurant,
+  addReview,
+  addResponse,
 };
 
 export default Api;

@@ -15,7 +15,7 @@ export interface IReview {
   text: string;
 
   rating: number;
-  user: { name: string };
+  user: { id?: string; name: string };
   date: string;
   response: string | null;
   response_date: string | null;
@@ -31,4 +31,13 @@ export interface IUser {
   isEmailVerified: boolean;
   name: 'string';
   role: 'owner' | 'admin' | 'user';
+}
+
+export interface IAddReviewParams {
+  restaurant: string;
+  text: string;
+  rating: number;
+}
+export interface IAddResponseParams {
+  text: string;
 }

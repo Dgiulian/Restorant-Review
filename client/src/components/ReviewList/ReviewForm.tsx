@@ -1,20 +1,56 @@
-import React, { ReactElement, useState } from 'react';
-import { FormElements } from '../../types';
+import React, { ReactElement, useContext, useState } from 'react';
+import { FormElements, IAddReviewParams, IRestaurant } from '../../types';
 import ReactStars from 'react-rating-stars-component';
-
+import Api from '../../api';
+import { useMutation } from 'react-query';
+import { queryClient } from '../../queryClient';
+import { AuthContext } from '../../auth/AuthProvider';
 interface FormControls extends HTMLFormControlsCollection {
-  response: HTMLTextAreaElement;
+  text: HTMLTextAreaElement;
 }
 
 type ReviewFormElement = FormElements<FormControls>;
 
-function ReviewForm(): ReactElement {
+function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
   const [rating, setRating] = useState(0);
-  const handleSubmit = (e: React.FormEvent<ReviewFormElement>) => {
+  const { user } = useContext(AuthContext);
+  const { mutate } = useMutation(
+    (review: IAddReviewParams) => Api.addReview(review),
+    {
+      onMutate(review) {
+        const cachedRestaurant = queryClient.getQueryData<IRestaurant>([
+          'restaurant',
+        ]);
+        // Optimistically update to the new value
+        if (!cachedRestaurant) {
+          return {};
+        }
+        cachedRestaurant.reviews?.push({
+          id: '',
+          ...review,
+          date: new Date().toISOString(),
+          response: null,
+          response_date: null,
+          user: {
+            id: user!.id,
+            name: user!.name,
+          },
+        });
+        queryClient.setQueryData(['restaurant'], cachedRestaurant);
+        return { cachedRestaurant, review };
+      },
+    }
+  );
+  const handleSubmit = async (e: React.FormEvent<ReviewFormElement>) => {
     e.preventDefault();
-    if (!e.currentTarget.elements.response) {
+    if (!e.currentTarget.elements.text) {
       return '';
     }
+    mutate({
+      restaurant,
+      rating,
+      text: e.currentTarget.elements.text.value,
+    });
   };
   return (
     <form className="mt-2" onSubmit={handleSubmit}>
@@ -29,6 +65,8 @@ function ReviewForm(): ReactElement {
       <textarea
         placeholder="Add a review"
         className="border w-full p-2"
+        name="text"
+        id="text"
       ></textarea>
       <button
         type="submit"
