@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Restaurant = require('./restaurant.model');
 const { toJSON } = require('./plugins');
 
 const reviewSchema = mongoose.Schema({
@@ -38,6 +39,24 @@ const reviewSchema = mongoose.Schema({
     required: true,
   },
 });
+reviewSchema.post('save', async (doc, next) => {
+  const restaurantId = doc.restaurant;
+  await updateRestaurantRating(restaurantId);
+  next();
+});
+reviewSchema.post('remove', async (doc, next) => {
+  const restaurantId = doc.restaurant;
+  await updateRestaurantRating(restaurantId);
+  next();
+});
+
+async function updateRestaurantRating(restaurantId) {
+  const [result] = await Review.aggregate([
+    { $match: { restaurant: { $eq: restaurantId } } },
+    { $group: { _id: 'restaurant', average: { $avg: '$rating' } } },
+  ]);
+  await Restaurant.findByIdAndUpdate(restaurantId, { rating: result.average });
+}
 
 reviewSchema.plugin(toJSON);
 
