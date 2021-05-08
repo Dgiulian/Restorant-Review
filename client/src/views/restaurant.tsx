@@ -43,7 +43,12 @@ function RestaurantPage(): ReactElement {
               </div>
               <div className="mt-auto">
                 <span>Rating</span>
-                <ReactStars count={5} size={30} value={4} edit={false} />
+                <ReactStars
+                  count={5}
+                  size={30}
+                  value={data.rating}
+                  edit={false}
+                />
               </div>
             </div>
           </section>
