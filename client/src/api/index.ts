@@ -156,6 +156,9 @@ async function addReview(body: IAddReviewParams) {
 async function addResponse(reviewId: string, body: IAddResponseParams) {
   return axios.post(`${SERVER_URL}/review/response/${reviewId}`, body);
 }
+async function removeReview(reviewId: string) {
+  return axios.delete(`${SERVER_URL}/review/${reviewId}`);
+}
 
 const Api = {
   register,
@@ -167,6 +170,7 @@ const Api = {
   createRestaurant,
   addReview,
   addResponse,
+  removeReview,
 };
 
 export default Api;

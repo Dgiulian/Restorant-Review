@@ -39,6 +39,21 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
         queryClient.setQueryData(['restaurant'], cachedRestaurant);
         return { cachedRestaurant, review };
       },
+      async onSuccess(data, variables) {
+        const cachedRestaurant = queryClient.getQueryData<IRestaurant>([
+          'restaurant',
+        ]);
+        // Optimistically update to the new value
+        if (!cachedRestaurant) {
+          return {};
+        }
+        const review = cachedRestaurant.reviews?.find(
+          (review) => review.id === ''
+        );
+        review!.id = data.data?.id;
+        queryClient.setQueryData(['restaurant'], cachedRestaurant);
+        return { cachedRestaurant, review };
+      },
     }
   );
   const handleSubmit = async (e: React.FormEvent<ReviewFormElement>) => {
