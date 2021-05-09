@@ -6,8 +6,13 @@ const { restaurantService } = require('../services');
 const { mongo } = require('mongoose');
 
 const getRestaurants = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const { rating = 0 } = req.query;
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const filter = {};
+  if (rating) {
+    filter.rating = { $gt: rating };
+  }
+  console.log(filter);
   const result = await restaurantService.queryRestaurants(filter, options);
   res.send(result);
 });
