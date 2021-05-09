@@ -44,7 +44,7 @@ function ReviewItem({ review, isRestaurantOwner, user }: Props): ReactElement {
       <div className="text-gray-800 text-lg">
         {review.user.name}
         {user && review.user?.id === user?.id && (
-          <button className="ml-4" onClick={handleDelete}>
+          <button className="ml-4 text-red-500" onClick={handleDelete}>
             remove
           </button>
         )}
