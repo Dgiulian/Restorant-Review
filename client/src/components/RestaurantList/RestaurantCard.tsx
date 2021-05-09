@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { IRestaurant } from '../../types';
-
+import RatingStar from '../RatingStar';
 interface RestaurantCardProps {
   restaurant: IRestaurant;
 }
@@ -11,8 +11,9 @@ function RestaurantCard({ restaurant }: RestaurantCardProps): ReactElement {
     <div className="lg:m-4 shadow-md hover:shadow-lg hover:bg-gray-100 rounded-lg bg-white my-12 mx-8 overflow-hidden ">
       <img src="/images/0.jpg" alt="" className="overflow-hidden" />
       <div className="p-4">
-        <h3 className="font-medium text-gray-600 text-lg my-2 uppercase">
+        <h3 className="font-medium text-gray-600 text-lg my-2 uppercase flex">
           {restaurant.name}
+          <RatingStar value={restaurant.rating || 0} />
         </h3>
         <h4 className="text-gray-600 mb-4">{restaurant.address}</h4>
         <p className="text-justify">
