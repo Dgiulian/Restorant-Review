@@ -12,7 +12,9 @@ const getRestaurants = catchAsync(async (req, res) => {
   if (rating) {
     filter.rating = { $gte: rating };
   }
-
+  if (req.user && req.user.role === 'owner') {
+    filter.owner = req.user.id;
+  }
   const result = await restaurantService.queryRestaurants(filter, options);
   res.send(result);
 });

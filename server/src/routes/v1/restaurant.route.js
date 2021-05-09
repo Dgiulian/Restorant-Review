@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('manageRestaurants'), validate(restaurantValidation.createRestaurant), restaurantController.createRestaurant)
-  .get(restaurantController.getRestaurants);
+  .get(auth(), restaurantController.getRestaurants);
 
 router
   .route('/:restaurantId')
