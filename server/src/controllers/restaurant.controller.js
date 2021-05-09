@@ -10,9 +10,9 @@ const getRestaurants = catchAsync(async (req, res) => {
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const filter = {};
   if (rating) {
-    filter.rating = { $gt: rating };
+    filter.rating = { $gte: rating };
   }
-  console.log(filter);
+
   const result = await restaurantService.queryRestaurants(filter, options);
   res.send(result);
 });
