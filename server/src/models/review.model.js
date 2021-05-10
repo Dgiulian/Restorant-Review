@@ -55,7 +55,10 @@ async function updateRestaurantRating(restaurantId) {
     { $match: { restaurant: { $eq: restaurantId } } },
     { $group: { _id: 'restaurant', average: { $avg: '$rating' } } },
   ]);
-  await Restaurant.findByIdAndUpdate(restaurantId, { rating: result.average });
+  const { average = 0 } = result;
+  if (result) {
+    await Restaurant.findByIdAndUpdate(restaurantId, { rating: average }, { useFindAndModify: true });
+  }
 }
 
 reviewSchema.plugin(toJSON);
