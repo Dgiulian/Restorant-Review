@@ -21,7 +21,7 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
   const { mutate } = useMutation(
     (review: IAddReviewParams) => Api.addReview(review),
     {
-      onMutate(review) {
+      async onSuccess({ data }, variables) {
         const cachedRestaurant = queryClient.getQueryData<IRestaurant>([
           'restaurant',
         ]);
@@ -29,34 +29,17 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
         if (!cachedRestaurant) {
           return {};
         }
+        console.log(data);
         cachedRestaurant.reviews?.push({
-          id: '',
-          ...review,
-          date: new Date().toISOString(),
-          response: null,
-          response_date: null,
+          ...data,
           user: {
             id: user!.id,
             name: user!.name,
           },
         });
+
         queryClient.setQueryData(['restaurant'], cachedRestaurant);
-        return { cachedRestaurant, review };
-      },
-      async onSuccess(data, variables) {
-        const cachedRestaurant = queryClient.getQueryData<IRestaurant>([
-          'restaurant',
-        ]);
-        // Optimistically update to the new value
-        if (!cachedRestaurant) {
-          return {};
-        }
-        const review = cachedRestaurant.reviews?.find(
-          (review) => review.id === ''
-        );
-        review!.id = data.data?.id;
-        queryClient.setQueryData(['restaurant'], cachedRestaurant);
-        return { cachedRestaurant, review };
+        return { cachedRestaurant, data };
       },
     }
   );
@@ -67,7 +50,7 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
       text: data.text,
     });
   };
-  console.log(errors, isDirty, isValid);
+
   return (
     <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
       <span className="text-xl">Add your review</span>
