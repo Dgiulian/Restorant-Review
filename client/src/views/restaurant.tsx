@@ -31,7 +31,7 @@ function RestaurantPage(): ReactElement {
     <Layout>
       {data ? (
         <>
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="">
               <img src="/images/1.jpg" alt={data!.name} className="w-full" />
             </div>
