@@ -1,47 +1,66 @@
 import React, { ReactElement, useContext, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link, useHistory } from 'react-router-dom';
-import { Input, PrimaryButton } from '../components/FormElements';
-import Api from '../api';
 import { AuthContext } from '../auth/AuthProvider';
-interface FormElements extends HTMLFormControlsCollection {
-  email: HTMLInputElement;
-  name: HTMLInputElement;
-  owner: HTMLInputElement;
-  password: HTMLInputElement;
-  password_retype: HTMLInputElement;
-}
-interface LoginFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
+import { Input, PrimaryButton } from '../components/FormElements';
+import FormValidationError from '../components/FormElements/FormValidationError';
+
+interface FormValues {
+  email: string;
+  name: string;
+  owner: boolean;
+  password: string;
+  password_retype: string;
 }
 
 function RegisterPage(): ReactElement {
   const [error, setError] = useState('');
-  const { register } = useContext(AuthContext);
+  const { register: apiRegister } = useContext(AuthContext);
   const history = useHistory();
-
-  const handleFormSubmit = async (e: React.FormEvent<LoginFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    getValues,
+    formState: { errors, isSubmitted },
+  } = useForm<FormValues>();
+  const repeatVal = (password_retype: string) =>
+    password_retype === getValues().password || 'Passwords do not match';
+  const validateRepeat = () => {
+    if (isSubmitted) {
+      // adjust this accordingly to differen validation modes. I assume "onSubmit" and "onChange" for revalidation here.
+      trigger('password_retype');
+    }
+  };
+  const handleFormSubmit = async (data: FormValues) => {
+    const { email, password, name, password_retype, owner } = data;
     setError('');
-    let email = e.currentTarget.elements.email?.value;
-    let password = e.currentTarget.elements.password?.value;
-    let password_retype = e.currentTarget.elements.password_retype?.value;
-    let name = e.currentTarget.elements.name?.value;
-    let isOwner = e.currentTarget.elements.owner?.checked;
     if (password !== password_retype) {
       setError('Password does not match retype');
       return;
     }
     try {
-      await register({
+      await apiRegister({
         email,
         password,
         name,
-        role: isOwner ? 'owner' : 'user',
+        role: owner ? 'owner' : 'user',
       });
       history.push('/');
     } catch (e) {
       setError(e.message);
     }
+  };
+  const passwordValidationOptions = {
+    required: 'Password is required',
+    minLength: {
+      value: 8,
+      message: 'Password must be at least 8 characters long',
+    },
+    validate: (value: string) =>
+      !value.match(/\d/) || !value.match(/[a-zA-Z]/)
+        ? 'Password must contain at least 1 letter and 1 number'
+        : undefined,
   };
   return (
     <div className="h-screen flex bg-gray-bg1">
@@ -50,14 +69,26 @@ function RegisterPage(): ReactElement {
           Create an account 🔐
         </h1>
 
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div>
             <label htmlFor="name">Name</label>
-            <Input type="name" id="name" placeholder="Your Name" />
+            <Input
+              type="name"
+              id="name"
+              placeholder="Your Name"
+              {...register('name', { required: 'Name is required' })}
+            />
+            <FormValidationError value={errors.name} />
           </div>
           <div>
             <label htmlFor="email">Email</label>
-            <Input type="email" id="email" placeholder="Your Email" />
+            <Input
+              type="email"
+              id="email"
+              placeholder="Your Email"
+              {...register('email', { required: 'Email fileld is required' })}
+            />
+            <FormValidationError value={errors.email} />
           </div>
 
           <div className="flex justify-between gap-2">
@@ -67,7 +98,10 @@ function RegisterPage(): ReactElement {
                 type="password"
                 id="password"
                 placeholder="Your Password"
+                {...register('password', passwordValidationOptions)}
+                onChange={validateRepeat}
               />
+              <FormValidationError value={errors.password} />
             </div>
 
             <div className="">
@@ -76,11 +110,21 @@ function RegisterPage(): ReactElement {
                 type="password"
                 id="password_retype"
                 placeholder="Retype your Password"
+                {...register('password_retype', {
+                  ...passwordValidationOptions,
+                  validate: repeatVal,
+                })}
               />
+              <FormValidationError value={errors.password_retype} />
             </div>
           </div>
           <div>
-            <input type="checkbox" id="owner" className="mr-1" />
+            <input
+              type="checkbox"
+              id="owner"
+              className="mr-1"
+              {...register('owner')}
+            />
             <label htmlFor="owner">I'm a restaurant owner</label>
           </div>
           {error && <p className="text-red-600 mt-2">{error}</p>}
