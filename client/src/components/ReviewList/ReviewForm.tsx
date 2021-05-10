@@ -1,19 +1,23 @@
 import React, { ReactElement, useContext, useState } from 'react';
-import { FormElements, IAddReviewParams, IRestaurant } from '../../types';
+import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import ReactStars from 'react-rating-stars-component';
 import Api from '../../api';
-import { useMutation } from 'react-query';
-import { queryClient } from '../../queryClient';
 import { AuthContext } from '../../auth/AuthProvider';
-interface FormControls extends HTMLFormControlsCollection {
-  text: HTMLTextAreaElement;
+import { queryClient } from '../../queryClient';
+import { IAddReviewParams, IRestaurant } from '../../types';
+interface FormValues {
+  text: string;
 }
-
-type ReviewFormElement = FormElements<FormControls>;
 
 function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
   const [rating, setRating] = useState(0);
   const { user } = useContext(AuthContext);
+  const { register, handleSubmit, formState } = useForm<FormValues>({
+    mode: 'onChange',
+  });
+  const { errors, isValid, isDirty } = formState;
+
   const { mutate } = useMutation(
     (review: IAddReviewParams) => Api.addReview(review),
     {
@@ -56,19 +60,16 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
       },
     }
   );
-  const handleSubmit = async (e: React.FormEvent<ReviewFormElement>) => {
-    e.preventDefault();
-    if (!e.currentTarget.elements.text) {
-      return '';
-    }
+  const onSubmit = async (data: FormValues) => {
     mutate({
       restaurant,
       rating,
-      text: e.currentTarget.elements.text.value,
+      text: data.text,
     });
   };
+  console.log(errors, isDirty, isValid);
   return (
-    <form className="mt-2" onSubmit={handleSubmit}>
+    <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
       <span className="text-xl">Add your review</span>
       <ReactStars
         count={5}
@@ -80,12 +81,14 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
       <textarea
         placeholder="Add a review"
         className="border w-full p-2"
-        name="text"
         id="text"
+        {...register('text', { required: true })}
       ></textarea>
+      {errors.text && <p>errors.text</p>}
       <button
         type="submit"
-        className="border bg-green-400 py-1 px-2 rounded-md"
+        className="border bg-green-400 py-1 px-2 rounded-md disabled:opacity-50"
+        disabled={!isDirty || !isValid || rating === 0}
       >
         Save review
       </button>
