@@ -1,19 +1,15 @@
-import React, { InputHTMLAttributes, useRef } from 'react';
+import React, { InputHTMLAttributes } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
-/* interface InputProps
-  extends React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  > {} */
-const Input = (props: InputProps) => {
-  const ref = useRef();
-  return (
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (props: InputProps, ref) => (
     <input
       className={`w-full p-2 mb-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out`}
       {...props}
+      ref={ref}
     />
-  );
-};
+  )
+);
 
 export default Input;
