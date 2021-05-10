@@ -2,26 +2,26 @@ import React, { ReactElement, useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthProvider';
 import { Input, PrimaryButton } from '../components/FormElements';
+import { useForm } from 'react-hook-form';
+import FormValidationError from '../components/FormElements/FormValidationError';
 
-interface FormElements extends HTMLFormControlsCollection {
-  email: HTMLInputElement;
-  password: HTMLInputElement;
-}
-interface LoginFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
-}
-
+type FormValues = {
+  email: string;
+  password: string;
+};
 function LoginPage(): ReactElement {
   const authContext = useContext(AuthContext);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
   const history = useHistory();
-  const handleFormSubmit = async (e: React.FormEvent<LoginFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
 
-    let email = e.currentTarget.elements.email?.value;
-    let password = e.currentTarget.elements.password?.value;
+  const onSubmit = async (data: FormValues) => {
     try {
-      await authContext.login({ email, password });
+      await authContext.login(data);
       history.push('/');
     } catch (e) {
       setError(e.message);
@@ -34,18 +34,40 @@ function LoginPage(): ReactElement {
           Log in to your account 🔐
         </h1>
 
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label htmlFor="email">Email</label>
-            <Input type="email" id="email" placeholder="Your Email" />
+            <Input
+              type="email"
+              id="email"
+              placeholder="Your Email"
+              {...register('email', { required: 'Email fileld is required' })}
+            />
+            <FormValidationError value={errors.email} />
           </div>
           <div>
             <label htmlFor="password">Password</label>
-            <Input type="password" id="password" placeholder="Your Password" />
+            <Input
+              type="password"
+              id="password"
+              placeholder="Your Password"
+              {...register('password', {
+                required: 'Password is required',
+                minLength: {
+                  value: 8,
+                  message: 'Password must be at least 8 characters long',
+                },
+                validate: (value) =>
+                  !value.match(/\d/) || !value.match(/[a-zA-Z]/)
+                    ? 'Password must contain at least 1 letter and 1 number'
+                    : undefined,
+              })}
+            />
+            <FormValidationError value={errors.password} />
           </div>
           {error && <p className="text-red-500">{error}</p>}
           <div className="flex justify-center items-center mt-4">
-            <PrimaryButton>Login</PrimaryButton>
+            <PrimaryButton type="submit">Login</PrimaryButton>
           </div>
           <hr className="border-gray-200  my-4" />
           <div className="flex justify-center items-baseline mt-4">
