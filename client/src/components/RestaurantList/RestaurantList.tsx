@@ -26,8 +26,8 @@ function RestaurantList({ filter }: RestaurantListProps): ReactElement {
 
   return (
     <div
-      className="lg:grid items-center container mx-auto my-auto "
-      style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))' }}
+      className="lg:grid items-center container mx-auto gap-2"
+      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))' }}
     >
       {data!.results.map((item: IRestaurant) => (
         <RestaurantCard key={item.id} restaurant={item} />
