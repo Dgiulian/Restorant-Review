@@ -1,10 +1,11 @@
-import React, { ReactElement, ChangeEvent, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { Input, PrimaryButton } from '../components/FormElements';
-import Layout from '../components/Layout';
-import Api from '../api';
+import React, { ChangeEvent, ReactElement, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { FaImage } from 'react-icons/fa';
+import { Link, useHistory } from 'react-router-dom';
+import Api from '../api';
+import { Input, PrimaryButton } from '../components/FormElements';
 import FormValidationError from '../components/FormElements/FormValidationError';
+import Layout from '../components/Layout';
 
 interface IFormData {
   name: string;
@@ -16,9 +17,11 @@ interface IFormData {
 function CreateRestaurantPage(): ReactElement {
   const history = useHistory();
   const [previewImage, setPreviewImage] = useState<string>('');
+  const [isDraggedOver, setIsDraggedOver] = useState(false);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<IFormData>({
     mode: 'onChange',
@@ -26,6 +29,40 @@ function CreateRestaurantPage(): ReactElement {
   const onSubmit = async (data: IFormData) => {
     const response = await Api.createRestaurant(data);
     history.push(`/restaurant/${response.data.id}`);
+  };
+  const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event?.target?.files?.[0]) {
+      const file = event.target.files[0];
+      handleImagePreview(file);
+    }
+  };
+  const handleDragOver = (e: any) => {
+    e.preventDefault();
+    setIsDraggedOver(true);
+  };
+  const handleDragLeave = (e: any) => {
+    e.preventDefault();
+    setIsDraggedOver(false);
+  };
+  const handleDrop = (e: any) => {
+    e.preventDefault();
+    setIsDraggedOver(false);
+    const files = Array.from(e.dataTransfer.files).filter((file: any) =>
+      file.type.startsWith('image/')
+    );
+    if (files.length) {
+      setValue('image', e.dataTransfer.files, { shouldValidate: true });
+      handleImagePreview(files[0] as Blob);
+    }
+  };
+
+  const handleImagePreview = (file: Blob) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result as string);
+    };
+
+    reader.readAsDataURL(file);
   };
   return (
     <Layout>
@@ -58,8 +95,21 @@ function CreateRestaurantPage(): ReactElement {
           <div>
             <label
               htmlFor="image"
-              className="p-4 border-dashed border-4 max-w-md border-gray-600 block cursor-pointer"
+              className={`mt-2 flex flex-col items-center justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-md ${
+                isDraggedOver
+                  ? 'border-blue-300 text-blue-300'
+                  : 'border-gray-300 text-gray-300'
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              data-testid="drop-files"
             >
+              <FaImage
+                className={`mx-auto h-12 w-12 ${
+                  isDraggedOver ? 'text-blue-300' : 'text-gray-300'
+                }`}
+              />
               Click to add image (16:9)
             </label>
             <Input
@@ -68,18 +118,8 @@ function CreateRestaurantPage(): ReactElement {
               className="hidden"
               accept="image/*"
               {...register('image', {})}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                if (event?.target?.files?.[0]) {
-                  const file = event.target.files[0];
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setPreviewImage(reader.result as string);
-                  };
-                  reader.readAsDataURL(file);
-                }
-              }}
+              onChange={handleFileSelect}
             />
-            <FormValidationError value={errors.name} />
           </div>
           <div>
             {previewImage ? (
