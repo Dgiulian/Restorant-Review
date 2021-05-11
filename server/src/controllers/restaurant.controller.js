@@ -20,7 +20,14 @@ const getRestaurants = catchAsync(async (req, res) => {
 });
 
 const createRestaurant = catchAsync(async (req, res) => {
-  const restaurant = await restaurantService.createRestaurant({ ...req.body, owner: req.user._id });
+  const { file } = req;
+
+  let image;
+
+  if (file) {
+    image = `${file.filename}`;
+  }
+  const restaurant = await restaurantService.createRestaurant({ ...req.body, image, owner: req.user._id });
 
   res.status(httpStatus.CREATED).send(restaurant);
 });

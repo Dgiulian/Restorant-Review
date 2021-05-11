@@ -13,6 +13,7 @@ const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
+const path = require('path');
 
 const app = express();
 
@@ -40,6 +41,9 @@ app.use(compression());
 // enable cors
 app.use(cors());
 app.options('*', cors());
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+//console.log(path.join(__dirname, 'uploads'));
 
 // jwt authentication
 app.use(passport.initialize());

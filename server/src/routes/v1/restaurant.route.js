@@ -3,12 +3,20 @@ const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const restaurantValidation = require('../../validations/restaurant.validation');
 const restaurantController = require('../../controllers/restaurant.controller');
+const multer = require('multer');
+const path = require('path');
+const upload = multer({ dest: path.join(__dirname, '../', '../', '/uploads/') });
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageRestaurants'), validate(restaurantValidation.createRestaurant), restaurantController.createRestaurant)
+  .post(
+    auth('manageRestaurants'),
+    upload.single('image'),
+    validate(restaurantValidation.createRestaurant),
+    restaurantController.createRestaurant
+  )
   .get(auth(), restaurantController.getRestaurants);
 
 router

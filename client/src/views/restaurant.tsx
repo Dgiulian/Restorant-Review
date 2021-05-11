@@ -8,6 +8,7 @@ import Layout from '../components/Layout';
 import ReviewList from '../components/ReviewList';
 import ReviewForm from '../components/ReviewList/ReviewForm';
 import { AuthContext } from '../auth/AuthProvider';
+import { getImagesUrl } from '../api';
 
 function RestaurantPage(): ReactElement {
   const params = useParams<{ restaurantId: string }>();
@@ -27,13 +28,16 @@ function RestaurantPage(): ReactElement {
   const hasReview = !!data?.reviews?.find(
     (review) => review.user.id === user?.id
   );
+  const image = data?.image
+    ? `${getImagesUrl()}/${data.image}`
+    : '/images/0.jpg';
   return (
     <Layout>
       {data ? (
         <>
           <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="">
-              <img src="/images/1.jpg" alt={data!.name} className="w-full" />
+              <img src={image} alt={data!.name} className="w-full" />
             </div>
             <div className="flex flex-col justify-between">
               <div>

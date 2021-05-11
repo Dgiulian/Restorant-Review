@@ -1,12 +1,8 @@
 import axios from 'axios';
-import {
-  IAddResponseParams,
-  IAddReviewParams,
-  IRestaurant,
-  IUser,
-} from '../types';
+import { IAddResponseParams, IAddReviewParams, IUser } from '../types';
 
 const SERVER_URL = 'http://localhost:5000/v1';
+const UPLOADS_URL = 'http://localhost:5000/uploads';
 export interface ILoginBody {
   email: string;
   password: string;
@@ -145,9 +141,22 @@ export async function getRestaurantById(restaurantId: string) {
   }
   return resp.data;
 }
-
-async function createRestaurant(body: IRestaurant) {
-  return axios.post(`${SERVER_URL}/restaurant`, body);
+interface ICreateRestaurantBody {
+  name: string;
+  description: string;
+  address: string;
+  image: FileList;
+}
+async function createRestaurant(body: ICreateRestaurantBody) {
+  const formData = new FormData();
+  const [file] = Array.from(body.image);
+  if (file) {
+    formData.append('image', file);
+  }
+  for (let [key, value] of Object.entries(body)) {
+    if (key !== 'image') formData.append(key, value);
+  }
+  return axios.post(`${SERVER_URL}/restaurant`, formData);
 }
 
 async function addReview(body: IAddReviewParams) {
@@ -159,7 +168,9 @@ async function addResponse(reviewId: string, body: IAddResponseParams) {
 async function removeReview(reviewId: string) {
   return axios.delete(`${SERVER_URL}/review/${reviewId}`);
 }
-
+export function getImagesUrl() {
+  return UPLOADS_URL;
+}
 const Api = {
   register,
   login,
@@ -171,6 +182,7 @@ const Api = {
   addReview,
   addResponse,
   removeReview,
+  getImagesUrl,
 };
 
 export default Api;

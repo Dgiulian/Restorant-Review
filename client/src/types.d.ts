@@ -6,6 +6,7 @@ export interface IRestaurant {
   owner?: string;
   reviews?: IReview[];
   rating?: number;
+  image?: string;
 }
 export interface ApiResponse<T> {
   results: T;
