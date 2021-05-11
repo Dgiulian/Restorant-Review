@@ -5,7 +5,14 @@ import FilteredRestaurants from '../containers/FilteredRestaurants';
 
 function HomePage(): ReactElement {
   return (
-    <Layout hero={<Hero />}>
+    <Layout
+      hero={
+        <Hero
+          header="Restaurants Reviews"
+          subheader="Rate and review your favorite places you've visited"
+        />
+      }
+    >
       <section className="pt-8 relative">
         <FilteredRestaurants />
       </section>
