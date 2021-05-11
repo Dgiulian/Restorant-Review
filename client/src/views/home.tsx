@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import Hero from '../components/Hero';
 import Layout from '../components/Layout';
+import PageTitle from '../components/PageTitle';
 import FilteredRestaurants from '../containers/FilteredRestaurants';
 
 function HomePage(): ReactElement {
@@ -13,6 +14,7 @@ function HomePage(): ReactElement {
         />
       }
     >
+      <PageTitle title="Restaurant reviews" />
       <section className="pt-8 relative">
         <FilteredRestaurants />
       </section>

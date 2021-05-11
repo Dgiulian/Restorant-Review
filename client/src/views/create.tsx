@@ -6,6 +6,7 @@ import Api from '../api';
 import { Input, PrimaryButton } from '../components/FormElements';
 import FormValidationError from '../components/FormElements/FormValidationError';
 import Layout from '../components/Layout';
+import PageTitle from '../components/PageTitle';
 
 interface IFormData {
   name: string;
@@ -66,6 +67,7 @@ function CreateRestaurantPage(): ReactElement {
   };
   return (
     <Layout>
+      <PageTitle title="Add your restaurant" />
       <form className="mt-16" onSubmit={handleSubmit(onSubmit)}>
         <h1 className="text-2xl mb-4">Create a new restaurant</h1>
         <div className="max-w-md">

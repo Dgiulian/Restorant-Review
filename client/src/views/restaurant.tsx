@@ -1,14 +1,14 @@
 import React, { ReactElement, useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { getRestaurantById } from '../api';
-import { IRestaurant } from '../types';
 import ReactStars from 'react-rating-stars-component';
+import { Link, useParams } from 'react-router-dom';
+import { getImagesUrl, getRestaurantById } from '../api';
+import { AuthContext } from '../auth/AuthProvider';
 import Layout from '../components/Layout';
+import PageTitle from '../components/PageTitle';
 import ReviewList from '../components/ReviewList';
 import ReviewForm from '../components/ReviewList/ReviewForm';
-import { AuthContext } from '../auth/AuthProvider';
-import { getImagesUrl } from '../api';
+import { IRestaurant } from '../types';
 
 function RestaurantPage(): ReactElement {
   const params = useParams<{ restaurantId: string }>();
@@ -35,6 +35,8 @@ function RestaurantPage(): ReactElement {
     <Layout>
       {data ? (
         <>
+          <PageTitle title={data.name} />
+
           <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="">
               <img src={image} alt={data!.name} className="w-full" />
@@ -75,7 +77,7 @@ function RestaurantPage(): ReactElement {
           ) : null}
         </>
       ) : (
-        <p>Restaurant not found</p>
+        <p className="text-2xl text-center">Restaurant not found</p>
       )}
     </Layout>
   );
