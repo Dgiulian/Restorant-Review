@@ -11,9 +11,9 @@ function Navbar(): ReactElement {
   const isOwner = user && user.role === 'owner';
 
   return (
-    <nav className="w-full border py-4 bg-green-400">
+    <nav className="w-full py-4 bg-green-700">
       <div className=" mx-auto flex justify-between items-baseline container">
-        <Link to="/" className="text-xl text-green-900">
+        <Link to="/" className="text-xl text-white">
           Restaurant Review
         </Link>
         <div className="ml-auto mr-1">
@@ -30,10 +30,13 @@ function Navbar(): ReactElement {
             </div>
           ) : (
             <>
-              <Link className="mx-1 bg-blue-300 px-2 py-1 rounded" to="/login">
+              <Link className="mx-1 text-white" to="/login">
                 Login
               </Link>
-              <Link className="mx-1 text-green-900" to="/register">
+              <Link
+                className="mx-1 bg-blue-900 text-white  px-2 py-1 rounded"
+                to="/register"
+              >
                 Register
               </Link>
             </>
