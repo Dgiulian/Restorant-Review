@@ -133,6 +133,13 @@ export async function getRestaurantList(filter: number) {
   }
   return resp.data;
 }
+export async function getRestaurantByOnwer() {
+  const resp = await axios.get(`${SERVER_URL}/restaurant/manage`);
+  if (resp.status !== 200) {
+    throw new Error(resp.statusText);
+  }
+  return resp.data;
+}
 
 export async function getRestaurantById(restaurantId: string) {
   const resp = await axios.get(`${SERVER_URL}/restaurant/${restaurantId}`);

@@ -4,19 +4,22 @@ import { getRestaurantList } from '../../api';
 import { ApiResponse, IRestaurant } from '../../types';
 import RestaurantCard from './RestaurantCard';
 interface RestaurantListProps {
-  filter: number;
+  filter?: number;
+  getRestaurantListFn?: (queryArgs: any) => Promise<any>;
 }
 type useQueryParams = [string, { filter: number }];
 
-function RestaurantList({ filter }: RestaurantListProps): ReactElement {
+function RestaurantList({
+  filter = 0,
+  getRestaurantListFn = ({ queryKey }: any) =>
+    getRestaurantList(queryKey[1].filter),
+}: RestaurantListProps): ReactElement {
   const { isLoading, error, data } = useQuery<
     ApiResponse<IRestaurant[]>,
     any,
     ApiResponse<IRestaurant[]>,
     useQueryParams
-  >(['restaurantList', { filter }], ({ queryKey }) =>
-    getRestaurantList(queryKey[1].filter)
-  );
+  >(['restaurantList', { filter }], getRestaurantListFn);
   if (isLoading) {
     return <p>Loading</p>;
   }

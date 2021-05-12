@@ -12,6 +12,13 @@ const getRestaurants = catchAsync(async (req, res) => {
   if (rating) {
     filter.rating = { $gte: rating };
   }
+  const result = await restaurantService.queryRestaurants(filter, options);
+  res.send(result);
+});
+const getRestaurantsByOwner = catchAsync(async (req, res) => {
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const filter = {};
+
   if (req.user && req.user.role === 'owner') {
     filter.owner = req.user.id;
   }
@@ -69,6 +76,7 @@ const updateRestaurant = catchAsync(async (req, res) => {
 
 module.exports = {
   getRestaurants,
+  getRestaurantsByOwner,
   createRestaurant,
   getRestaurant,
   deleteRestaurant,

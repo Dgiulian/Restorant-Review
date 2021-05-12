@@ -17,7 +17,9 @@ router
     validate(restaurantValidation.createRestaurant),
     restaurantController.createRestaurant
   )
-  .get(auth(), restaurantController.getRestaurants);
+  .get(restaurantController.getRestaurants);
+
+router.route('/manage').get(auth('manageRestaurants'), restaurantController.getRestaurantsByOwner);
 
 router
   .route('/:restaurantId')

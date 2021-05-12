@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './auth/PrivateRoute';
 import CreateRestaurantPage from './views/create';
+import ManageRestaurantsPage from './views/manage';
 import HomePage from './views/home';
 import LoginPage from './views/login';
 import RegisterPage from './views/register';
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" exact component={LoginPage} />
         <Route path="/register" exact component={RegisterPage} />
         <PrivateRoute path="/create" exact component={CreateRestaurantPage} />
+        <PrivateRoute path="/manage" exact component={ManageRestaurantsPage} />
         <Route
           path="/restaurant/:restaurantId"
           exact
