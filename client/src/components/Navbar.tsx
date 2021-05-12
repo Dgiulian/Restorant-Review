@@ -1,13 +1,15 @@
 import React, { ReactElement, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthProvider';
 import Dropdown from './Dropdown';
 
 function Navbar(): ReactElement {
   const { isLogged, logout, user } = useContext(AuthContext);
+  const history = useHistory();
 
   const handleLogout = () => {
     logout();
+    history.push('/');
   };
   const isOwner = user && user.role === 'owner';
 
