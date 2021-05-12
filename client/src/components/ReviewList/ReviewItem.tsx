@@ -7,14 +7,23 @@ import ReviewResponse from './ReviewResponse';
 import ReviewResponseForm from './ReviewResponseForm';
 import Api from '../../api';
 import { queryClient } from '../../queryClient';
+import Pill from '../Pill';
 
 interface Props {
   review: IReview;
   isRestaurantOwner: boolean;
   user: IUser | undefined;
+  best?: boolean;
+  worst?: boolean;
 }
 
-function ReviewItem({ review, isRestaurantOwner, user }: Props): ReactElement {
+function ReviewItem({
+  review,
+  isRestaurantOwner,
+  user,
+  best = false,
+  worst = false,
+}: Props): ReactElement {
   const { mutate } = useMutation(
     (reviewId: string) => Api.removeReview(reviewId),
     {
@@ -43,6 +52,8 @@ function ReviewItem({ review, isRestaurantOwner, user }: Props): ReactElement {
     <div className="my-4">
       <div className="text-gray-800 text-lg">
         {review.user.name}
+        {best && !worst ? <Pill text="Top" variant="best" /> : null}
+        {worst && !best ? <Pill text="Worst" variant="worst" /> : null}
         {user && review.user?.id === user?.id && (
           <button className="ml-4 text-red-500" onClick={handleDelete}>
             remove
