@@ -49,13 +49,15 @@ function ReviewItem({
       mutate(review.id);
     }
   };
+  const isAdmin = user && user.role === 'admin';
+  const isUser = user && review.user?.id === user?.id;
   return (
     <div className="my-4">
       <div className="text-gray-800 text-lg">
         <span className="font-bold text-gray-500">{review.user.name}</span>
         {best && !worst ? <Pill text="Top" variant="best" /> : null}
         {worst && !best ? <Pill text="Worst" variant="worst" /> : null}
-        {user && review.user?.id === user?.id && (
+        {(isAdmin || isUser) && (
           <button
             className="ml-4 text-red-500 text-sm outline-none focus:outline-none"
             onClick={handleDelete}
