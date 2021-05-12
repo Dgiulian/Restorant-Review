@@ -8,6 +8,7 @@ import ReviewResponseForm from './ReviewResponseForm';
 import Api from '../../api';
 import { queryClient } from '../../queryClient';
 import Pill from '../Pill';
+import { FaTrash } from 'react-icons/fa';
 
 interface Props {
   review: IReview;
@@ -51,12 +52,15 @@ function ReviewItem({
   return (
     <div className="my-4">
       <div className="text-gray-800 text-lg">
-        {review.user.name}
+        <span className="font-bold text-gray-500">{review.user.name}</span>
         {best && !worst ? <Pill text="Top" variant="best" /> : null}
         {worst && !best ? <Pill text="Worst" variant="worst" /> : null}
         {user && review.user?.id === user?.id && (
-          <button className="ml-4 text-red-500" onClick={handleDelete}>
-            remove
+          <button
+            className="ml-4 text-red-500 text-sm outline-none focus:outline-none"
+            onClick={handleDelete}
+          >
+            <FaTrash />
           </button>
         )}
       </div>
