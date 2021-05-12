@@ -1,4 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
+import Footer from './Footer';
 import Navbar from './Navbar';
 
 interface Props {
@@ -8,11 +9,16 @@ interface Props {
 
 function Layout({ children, hero }: Props): ReactElement {
   return (
-    <main>
-      <Navbar />
-      {hero}
-      <div className="container mx-auto">{children}</div>
-    </main>
+    <>
+      <header>
+        <Navbar />
+      </header>
+      <main>
+        {hero}
+        <div className="container mx-auto">{children}</div>
+      </main>
+      <Footer />
+    </>
   );
 }
 
