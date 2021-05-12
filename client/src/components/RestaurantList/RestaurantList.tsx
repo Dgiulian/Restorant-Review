@@ -38,7 +38,9 @@ function RestaurantList({
         <RestaurantCard key={item.id} restaurant={item} user={user} />
       ))}
       {data!.results.length === 0 && (
-        <p className="text-center text-xl mt-4">No restaurants found</p>
+        <p className="text-center text-xl mt-4 col-span-2">
+          No restaurants found
+        </p>
       )}
     </div>
   );

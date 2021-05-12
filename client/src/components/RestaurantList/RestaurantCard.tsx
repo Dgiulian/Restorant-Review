@@ -21,13 +21,12 @@ function RestaurantCard({
     {
       async onSuccess({ data }, variables) {
         const cachedRestaurant = queryClient.getQueryData<IRestaurant>([
-          'restaurant',
+          'restaurantList',
         ]);
         // Optimistically update to the new value
         if (!cachedRestaurant) {
           return {};
         }
-        console.log(data);
         /*         cachedRestaurant.reviews?.push({
           ...data,
           user: {
@@ -53,7 +52,7 @@ function RestaurantCard({
     }
   };
   return (
-    <div className=" shadow-md hover:shadow-lg hover:bg-gray-100 rounded-lg bg-white my-12 mx-8 lg:m-4 space-y-4 overflow-hidden h-full flex flex-col">
+    <div className=" shadow-md rounded-lg bg-white my-12 mx-8 lg:m-4 space-y-4 overflow-hidden h-full flex flex-col">
       <img
         src={image}
         alt=""
@@ -69,7 +68,7 @@ function RestaurantCard({
         <div className="mb-4 flex justify-between">
           <Link
             to={`/restaurant/${restaurant.id}`}
-            className="hover:bg-green-700 rounded-md py-2 px-3 font-semibold hover:text-white bg-green-400 text-green-100"
+            className=" rounded-md py-2 px-3 font-semibold hover:text-white bg-green-700 hover:bg-green-600 text-white"
           >
             {canManage ? 'Manage' : 'Add Review'}
           </Link>

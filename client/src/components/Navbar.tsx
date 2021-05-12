@@ -28,7 +28,7 @@ function Navbar(): ReactElement {
                 <>
                   <Link
                     to="/manage"
-                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-green-300"
+                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-green-600 hover:text-white"
                     role="menuitem"
                     tabIndex={-1}
                     id="menu-item-1"
@@ -38,7 +38,7 @@ function Navbar(): ReactElement {
                   <Link
                     to="/create"
                     href="/#"
-                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-green-300"
+                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-green-600 hover:text-white"
                     role="menuitem"
                     tabIndex={-1}
                     test-id="menu-item-2"
@@ -48,7 +48,7 @@ function Navbar(): ReactElement {
                 </>
               )}
               <button
-                className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-green-300"
+                className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-green-600 hover:text-white"
                 onClick={handleLogout}
               >
                 Logout

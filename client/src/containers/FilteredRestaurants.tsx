@@ -6,7 +6,7 @@ function FilteredRestaurants(): ReactElement {
   const [rating, setRating] = useState(0);
   return (
     <div>
-      <div className="ml-auto">
+      <div className="ml-4">
         <h2 className="text-lg">Filter by rating</h2>
         <div className="mb-4">
           <RatingFilter selectedRating={rating} onSelectRating={setRating} />
