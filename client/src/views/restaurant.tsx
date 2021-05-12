@@ -15,8 +15,9 @@ function RestaurantPage(): ReactElement {
 
   const { user } = useContext(AuthContext);
 
-  const { isLoading, error, data } = useQuery<IRestaurant>('restaurant', () =>
-    getRestaurantById(params.restaurantId)
+  const { isLoading, error, data } = useQuery<IRestaurant>(
+    ['restaurant', params.restaurantId],
+    () => getRestaurantById(params.restaurantId)
   );
   if (isLoading) {
     return <p>Loading</p>;
