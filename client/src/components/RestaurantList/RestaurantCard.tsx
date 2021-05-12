@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 import { Link } from 'react-router-dom';
 import Api, { getImagesUrl } from '../../api';
 import { queryClient } from '../../queryClient';
-import { IRestaurant, IUser } from '../../types';
+import { IRestaurant, IRestaurantList, IUser } from '../../types';
 import { DeleteButton } from '../FormElements';
 import RatingStar from '../RatingStar';
 interface RestaurantCardProps {
@@ -20,23 +20,25 @@ function RestaurantCard({
     (restaurantId: string) => Api.removeRestaurant(restaurantId),
     {
       async onSuccess({ data }, variables) {
-        const cachedRestaurant = queryClient.getQueryData<IRestaurant>([
+        const cachedRestaurantList = queryClient.getQueryData<IRestaurantList>([
           'restaurantList',
+          { filter: 0 },
         ]);
         // Optimistically update to the new value
-        if (!cachedRestaurant) {
+        console.log(cachedRestaurantList, data);
+        if (!cachedRestaurantList) {
           return {};
         }
-        /*         cachedRestaurant.reviews?.push({
-          ...data,
-          user: {
-            id: user!.id,
-            name: user!.name,
-          },
-        });
+        /*
+        const updatedRestaurantList = cachedRestaurantList.results.filter(
+          (restaurant: IRestaurant) => restaurant.id !== data.id
+        );
 
-        queryClient.setQueryData(['restaurant'], cachedRestaurant); */
-        return { cachedRestaurant, data };
+        queryClient.setQueryData(['restaurantList', { filter: 0 }], {
+          ...cachedRestaurantList,
+          results: updatedRestaurantList,
+        }); */
+        //return { cachedRestaurantList, data };
       },
     }
   );

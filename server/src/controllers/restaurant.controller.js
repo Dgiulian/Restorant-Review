@@ -54,11 +54,11 @@ const deleteRestaurant = catchAsync(async (req, res) => {
   if (!restaurant) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found');
   }
-  if (!mongo.ObjectID(restaurant.owner._id).equals(req.user._id)) {
+  if (req.user.role !== 'admin' && !mongo.ObjectID(restaurant.owner._id).equals(req.user._id)) {
     throw new ApiError(httpStatus.FORBIDDEN, 'Not Restaurant owner');
   }
   await restaurantService.deleteRestaurantById(restaurantId);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.status(httpStatus.OK).send(restaurant);
 });
 
 const updateRestaurant = catchAsync(async (req, res) => {
@@ -67,7 +67,7 @@ const updateRestaurant = catchAsync(async (req, res) => {
   if (!restaurant) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found');
   }
-  if (!mongo.ObjectID(restaurant.owner._id).equals(req.user._id)) {
+  if (req.user.role !== 'admin' && !mongo.ObjectID(restaurant.owner._id).equals(req.user._id)) {
     throw new ApiError(httpStatus.FORBIDDEN, 'Not Restaurant owner');
   }
   const updatedRestaurant = await restaurantService.updateRestaurantById(req.params.restaurantId, req.body);

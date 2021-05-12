@@ -43,3 +43,11 @@ export interface IAddReviewParams {
 export interface IAddResponseParams {
   text: string;
 }
+
+export interface IRestaurantList {
+  limit: number;
+  page: number;
+  totalPages: number;
+  totalResults: number;
+  results: IRestaurant[];
+}
