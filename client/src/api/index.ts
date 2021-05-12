@@ -128,7 +128,7 @@ export const getProtected = () => {
 
 export async function getRestaurantList(filter: number) {
   const resp = await axios.get(
-    `${SERVER_URL}/restaurant?rating=${filter}&limit=100`
+    `${SERVER_URL}/restaurant?rating=${filter}&limit=100&sortBy=rating:desc`
   );
   if (resp.status !== 200) {
     throw new Error(resp.statusText);
