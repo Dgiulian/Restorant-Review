@@ -9,16 +9,16 @@ interface Props {
 
 function Layout({ children, hero }: Props): ReactElement {
   return (
-    <>
+    <main className="flex flex-col justify-between min-h-screen">
       <header>
         <Navbar />
       </header>
-      <main>
+      <section className="flex-1">
         {hero}
         <div className="container mx-auto">{children}</div>
-      </main>
+      </section>
       <Footer />
-    </>
+    </main>
   );
 }
 
