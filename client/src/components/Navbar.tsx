@@ -1,6 +1,7 @@
 import React, { ReactElement, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthProvider';
+import Dropdown from './Dropdown';
 
 function Navbar(): ReactElement {
   const { isLogged, logout, user } = useContext(AuthContext);
@@ -17,24 +18,47 @@ function Navbar(): ReactElement {
           Restaurant Review
         </Link>
         <div className="ml-auto mr-1">
-          {isOwner && <Link to="/create">Add your restaurant</Link>}
+          {/* Add your restaurant</Link> */}
+
           {isLogged ? (
-            <div>
-              <span className="mx-1 ">{user?.email}</span>
+            <Dropdown title={user?.email || ''}>
+              {isOwner && (
+                <>
+                  <Link
+                    to="/manage"
+                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-green-300"
+                    role="menuitem"
+                    tabIndex={-1}
+                    id="menu-item-1"
+                  >
+                    Manage your restaurants
+                  </Link>
+                  <Link
+                    to="/create"
+                    href="/#"
+                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-green-300"
+                    role="menuitem"
+                    tabIndex={-1}
+                    test-id="menu-item-2"
+                  >
+                    Add your restaurant
+                  </Link>
+                </>
+              )}
               <button
-                className="mx-1 bg-blue-300 px-2 py-1 rounded"
+                className="text-gray-700 block px-4 py-2 text-sm w-full text-left hover:bg-green-300"
                 onClick={handleLogout}
               >
                 Logout
               </button>
-            </div>
+            </Dropdown>
           ) : (
             <>
               <Link className="mx-1 text-white" to="/login">
                 Login
               </Link>
               <Link
-                className="mx-1 bg-blue-900 text-white  px-2 py-1 rounded"
+                className="mx-1 bg-blue-900 text-white  px-2 py-1 rounded w-full "
                 to="/register"
               >
                 Register
