@@ -2,13 +2,10 @@ import React, { ReactElement, useContext } from 'react';
 import { Redirect, useHistory } from 'react-router';
 import { getRestaurantByOnwer } from '../api';
 import { AuthContext } from '../auth/AuthProvider';
-import Hero from '../components/Hero';
 import Layout from '../components/Layout';
 import RestaurantList from '../components/RestaurantList';
 
-interface Props {}
-
-function ManageRestaurantsPage({}: Props): ReactElement {
+function ManageRestaurantsPage(): ReactElement {
   const { user } = useContext(AuthContext);
   const history = useHistory();
 

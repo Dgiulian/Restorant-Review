@@ -29,7 +29,6 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
         if (!cachedRestaurant) {
           return {};
         }
-        console.log(data);
         cachedRestaurant.reviews?.push({
           ...data,
           user: {

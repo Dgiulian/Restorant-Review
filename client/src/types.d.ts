@@ -32,9 +32,9 @@ export interface IUser {
   id: string;
   isEmailVerified: boolean;
   name: 'string';
-  role: 'owner' | 'admin' | 'user';
+  role: UserRole;
 }
-
+export type UserRole = 'owner' | 'admin' | 'user';
 export interface IAddReviewParams {
   restaurant: string;
   text: string;

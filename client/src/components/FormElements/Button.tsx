@@ -15,7 +15,7 @@ interface ButtonProps
 export const PrimaryButton = (props: ButtonProps) => {
   return (
     <button
-      className={`bg-green py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-green-dark`}
+      className={`bg-green py-2 px-4 text-white rounded border border-green focus:outline-none focus:border-green-dark`}
       {...props}
     >
       {props.children}
@@ -25,7 +25,17 @@ export const PrimaryButton = (props: ButtonProps) => {
 export const SecondaryButton = (props: ButtonProps) => {
   return (
     <button
-      className={`bg-blue-500 py-2 px-4 text-sm text-white rounded border border-blue-500 focus:outline-none focus:border-blue-dark ${props.customClassName}`}
+      className={`bg-blue-500 py-2 px-4 text-white rounded border border-blue-500 focus:outline-none focus:border-blue-dark ${props.customClassName}`}
+      {...props}
+    >
+      {props.children}
+    </button>
+  );
+};
+export const DeleteButton = (props: ButtonProps) => {
+  return (
+    <button
+      className={`py-2 px-4 text-red-600 focus:outline-none outline-none ${props.customClassName}`}
       {...props}
     >
       {props.children}

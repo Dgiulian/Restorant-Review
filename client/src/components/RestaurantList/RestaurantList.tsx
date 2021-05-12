@@ -1,6 +1,7 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import { useQuery } from 'react-query';
 import { getRestaurantList } from '../../api';
+import { AuthContext } from '../../auth/AuthProvider';
 import { ApiResponse, IRestaurant } from '../../types';
 import RestaurantCard from './RestaurantCard';
 interface RestaurantListProps {
@@ -20,6 +21,7 @@ function RestaurantList({
     ApiResponse<IRestaurant[]>,
     useQueryParams
   >(['restaurantList', { filter }], getRestaurantListFn);
+  const { user } = useContext(AuthContext);
   if (isLoading) {
     return <p>Loading</p>;
   }
@@ -33,7 +35,7 @@ function RestaurantList({
       style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))' }}
     >
       {data!.results.map((item: IRestaurant) => (
-        <RestaurantCard key={item.id} restaurant={item} />
+        <RestaurantCard key={item.id} restaurant={item} user={user} />
       ))}
       {data!.results.length === 0 && (
         <p className="text-center text-xl mt-4">No restaurants found</p>

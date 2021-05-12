@@ -127,7 +127,9 @@ export const getProtected = () => {
 };
 
 export async function getRestaurantList(filter: number) {
-  const resp = await axios.get(`${SERVER_URL}/restaurant?rating=${filter}`);
+  const resp = await axios.get(
+    `${SERVER_URL}/restaurant?rating=${filter}&limit=100`
+  );
   if (resp.status !== 200) {
     throw new Error(resp.statusText);
   }
@@ -178,6 +180,10 @@ async function removeReview(reviewId: string) {
 export function getImagesUrl() {
   return UPLOADS_URL;
 }
+
+export function removeRestaurant(restaurantId: string) {
+  return axios.delete(`${SERVER_URL}/restaurant/${restaurantId}`);
+}
 const Api = {
   register,
   login,
@@ -190,6 +196,7 @@ const Api = {
   addResponse,
   removeReview,
   getImagesUrl,
+  removeRestaurant,
 };
 
 export default Api;
