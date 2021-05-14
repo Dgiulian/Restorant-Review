@@ -15,7 +15,7 @@ export interface ApiResponse<T> {
 export interface IReview {
   id: string;
   text: string;
-
+  restaurant: string;
   rating: number;
   user: { id?: string; name: string };
   date: string;

@@ -31,6 +31,7 @@ function ReviewItem({
       async onMutate(reviewId: string) {
         const cachedRestaurant = queryClient.getQueryData<IRestaurant>([
           'restaurant',
+          review.restaurant,
         ]);
         // Optimistically update to the new value
         if (!cachedRestaurant) {
@@ -39,7 +40,10 @@ function ReviewItem({
         cachedRestaurant.reviews = cachedRestaurant.reviews!.filter(
           (review) => review.id === reviewId
         );
-        queryClient.setQueryData(['restaurant'], cachedRestaurant);
+        queryClient.setQueryData(
+          ['restaurant', review.restaurant],
+          cachedRestaurant
+        );
         return { cachedRestaurant, review };
       },
     }
@@ -78,7 +82,10 @@ function ReviewItem({
       {review.response ? (
         <ReviewResponse date={review.response_date} text={review.response} />
       ) : isRestaurantOwner ? (
-        <ReviewResponseForm reviewId={review.id} />
+        <ReviewResponseForm
+          reviewId={review.id}
+          restaurant={review.restaurant}
+        />
       ) : null}
     </div>
   );

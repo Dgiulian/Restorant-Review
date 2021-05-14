@@ -12,19 +12,24 @@ type ReviewResponseFormElement = FormElements<FormControls>;
 
 interface ReviewResponseProps {
   reviewId: string;
+  restaurant: string;
 }
 
-function ReviewResponseForm({ reviewId }: ReviewResponseProps): ReactElement {
+function ReviewResponseForm({
+  reviewId,
+  restaurant: restaurantId,
+}: ReviewResponseProps): ReactElement {
   const { mutate, isLoading } = useMutation(
     (response: string) => Api.addResponse(reviewId, { text: response }),
     {
       async onMutate(response, ...args) {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(['restaurant']);
+        await queryClient.cancelQueries(['restaurant', restaurantId]);
 
         // Snapshot the previous value
         const restaurant = queryClient.getQueryData<IRestaurant>([
           'restaurant',
+          restaurantId,
         ]);
 
         // Optimistically update to the new value
@@ -36,7 +41,7 @@ function ReviewResponseForm({ reviewId }: ReviewResponseProps): ReactElement {
           review.response = response;
           review.response_date = new Date().toISOString();
         }
-        queryClient.setQueryData(['restaurant'], restaurant);
+        queryClient.setQueryData(['restaurant', restaurantId], restaurant);
 
         // Return a context with the previous and new todo
         return { restaurant, review };
