@@ -1,25 +1,15 @@
-import React from 'react';
 import {
   render,
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import HomePage from '../../views/home';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { queryClient } from '../../queryClient';
-import { QueryClientProvider } from 'react-query';
+import React from 'react';
 import { act } from 'react-dom/test-utils';
+import HomePage from '../../views/home';
+import { withProviders } from '../utils';
 
 test('renders Home Page', async () => {
-  const history = createMemoryHistory();
-  render(
-    <QueryClientProvider client={queryClient}>
-      <Router history={history}>
-        <HomePage />
-      </Router>
-    </QueryClientProvider>
-  );
+  render(withProviders(<HomePage />));
   const linkElement = screen.getByText(/Restaurants Reviews/i);
   expect(linkElement).toBeInTheDocument();
   await act(async () => {
