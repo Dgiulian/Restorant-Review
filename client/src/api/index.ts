@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { IAddResponseParams, IAddReviewParams, IUser } from '../types';
 
-const SERVER_URL = 'http://localhost:5000/v1';
+export const SERVER_URL = 'http://localhost:5000/v1';
 const UPLOADS_URL = 'http://localhost:5000/uploads';
 export interface ILoginBody {
   email: string;

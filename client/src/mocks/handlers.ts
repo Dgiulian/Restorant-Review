@@ -1,4 +1,5 @@
 import { rest } from 'msw';
+import { SERVER_URL } from '../api';
 import RestaurantHandler from './restaurant.handler';
 
 export const handlers = [
@@ -12,7 +13,10 @@ export const handlers = [
     );
   }),
 
-  rest.post('/restaurants', RestaurantHandler.getRestaurants),
+  rest.get(`${SERVER_URL}/restaurant`, RestaurantHandler.getRestaurants),
   // Handles a GET /user request
-  rest.get('/restaurants', (req, res, ctx) => {}),
+  rest.get(
+    `${SERVER_URL}/restaurant/:restaurantId`,
+    RestaurantHandler.getRestaurantById
+  ),
 ];
