@@ -69,8 +69,12 @@ function RestaurantPage(): ReactElement {
             <p className="text-center mt-4">
               <Link to="/login" className="text-blue-600 mr-1">
                 Login
-              </Link>{' '}
-              to leave a review
+              </Link>
+              &nbsp;or&nbsp;
+              <Link to="/register" className="text-blue-600 mr-1">
+                Register
+              </Link>
+              &nbsp;to leave a review
             </p>
           )}
           {user && !isRestaurantOwner && !hasReview ? (
