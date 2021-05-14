@@ -24,6 +24,7 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
       async onSuccess({ data }, variables) {
         const cachedRestaurant = queryClient.getQueryData<IRestaurant>([
           'restaurant',
+          restaurant,
         ]);
         // Optimistically update to the new value
         if (!cachedRestaurant) {
@@ -37,7 +38,7 @@ function ReviewForm({ restaurant }: { restaurant: string }): ReactElement {
           },
         });
 
-        queryClient.setQueryData(['restaurant'], cachedRestaurant);
+        queryClient.setQueryData(['restaurant', restaurant], cachedRestaurant);
         return { cachedRestaurant, data };
       },
     }
