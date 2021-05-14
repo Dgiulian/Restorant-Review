@@ -5,6 +5,7 @@ import { restaurantsData } from './fixtures/restaurants';
 const RestaurantHandler = {
   getRestaurants(req: RestRequest, res: ResponseComposition, ctx: RestContext) {
     // Persist user's authentication in the session
+
     return res(
       // Respond with a 200 status code
       ctx.json({
@@ -23,7 +24,7 @@ const RestaurantHandler = {
     ctx: RestContext
   ) {
     const { restaurantId } = req.params;
-    const restaurant = restaurantsData.find((r) => r.id === restaurantId);
+    const restaurant = restaurantsData[0];
     const reviews = reviewsData;
     return res(
       // Respond with a 200 status code

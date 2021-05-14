@@ -13,10 +13,10 @@ export const handlers = [
     );
   }),
 
-  rest.get(`${SERVER_URL}/restaurant`, RestaurantHandler.getRestaurants),
-  // Handles a GET /user request
   rest.get(
     `${SERVER_URL}/restaurant/:restaurantId`,
     RestaurantHandler.getRestaurantById
   ),
+  //rest.get(`${SERVER_URL}/restaurant`, RestaurantHandler.getRestaurants),
+  // Handles a GET /user request
 ];
